@@ -14,6 +14,12 @@ Pillow
 
 フォルダ階層  
 teacher data  
+names ── faceA ──img1.jpg  
+　　　 ├── faceB --img1.jpg 
+
+└── hoge_dir
+    ├── hoge
+    └── hogehoge
 names -- faceA ---img1.jpg  
        |        |-img2.jpg  
        |        |-img3.jpg  
