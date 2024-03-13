@@ -23,12 +23,12 @@ names ── faceA ── img1.jpg
 
 detect data  
 main_folde ── sub_folderA ── img1.jpg  
-　　　 　　　│              ├─ img2.jpg  
-            │              ├─ img3.jpg  
-            │              └─ img4.jpg  
-　　　　　　 ├── sub_folderB ── img1.jpg  
-            |               └─ img2.jpg  
-　　　　　　 ├── sub_folderC ── img1.jpg  
+　　　　　　│　　　　　　　　├─ img2.jpg  
+　　　　　　│　　　　　　　　├─ img3.jpg  
+　　　　　　│　　　　　　　　└─ img4.jpg  
+　　　　　　├── sub_folderB ── img1.jpg  
+　　　　　　|　　　　　　　　└─ img2.jpg  
+　　　　　　├── sub_folderC ── img1.jpg  
 
 
 **使用方法**  
