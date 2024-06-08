@@ -31,12 +31,14 @@ def get_averages(names, scores):
     return averages
 
 
-def judge_similarity_by_embeddings(known_embeddings, known_names, unknown_embeddings, threshold):
+def judge_similarity_by_embeddings(
+    known_embeddings, known_names, unknown_embeddings, threshold
+):
     predicted_persons = []
     predicted_scores = []
     for embeddings in unknown_embeddings:
         scores = np.dot(embeddings, known_embeddings.T)
-        scores = np.clip(scores, 0., None)
+        scores = np.clip(scores, 0.0, None)
 
         averages = get_averages(known_names, scores)
         person = sorted(averages, key=lambda x: averages[x], reverse=True)[0]
@@ -52,23 +54,24 @@ def judge_similarity_by_embeddings(known_embeddings, known_names, unknown_embedd
 
 
 def get_face_rectangle_info(name):
-    PAINT_INFO_MAP = {"FaceA": {"exec": True,
-                                "color": (255, 0, 0),
-                                "bolid": 1},
-                      "FaceB": {"exec": True,
-                                "color": (255, 255, 0),
-                                "bolid": 1},
-                      None: {"exec": False,
-                             "color": (0, 0, 255),
-                             "bolid": 1},
-                      "else": {"exec": False,
-                               "color": (0, 255, 255),
-                               "bolid": 1},
-                      }
+    PAINT_INFO_MAP = {
+        "FaceA": {"exec": True, "color": (255, 0, 0), "bolid": 1},
+        "FaceB": {"exec": True, "color": (255, 255, 0), "bolid": 1},
+        None: {"exec": False, "color": (0, 0, 255), "bolid": 1},
+        "else": {"exec": False, "color": (0, 255, 255), "bolid": 1},
+    }
     if name in PAINT_INFO_MAP:
-        return PAINT_INFO_MAP[name]["exec"], PAINT_INFO_MAP[name]["color"], PAINT_INFO_MAP[name]["bolid"]
+        return (
+            PAINT_INFO_MAP[name]["exec"],
+            PAINT_INFO_MAP[name]["color"],
+            PAINT_INFO_MAP[name]["bolid"],
+        )
     else:
-        return PAINT_INFO_MAP["else"]["exec"], PAINT_INFO_MAP["else"]["color"], PAINT_INFO_MAP["else"]["bolid"]
+        return (
+            PAINT_INFO_MAP["else"]["exec"],
+            PAINT_INFO_MAP["else"]["color"],
+            PAINT_INFO_MAP["else"]["bolid"],
+        )
 
 
 def draw_faces_with_rectangles(image, faces, name, score):
@@ -78,10 +81,22 @@ def draw_faces_with_rectangles(image, faces, name, score):
         bounding_box = face.bbox.astype(int)
         flag, color, bolid = get_face_rectangle_info(name[i])
         if flag:
-            cv2.rectangle(drawn_image, (bounding_box[0], bounding_box[1]),
-                          (bounding_box[2], bounding_box[3]), color, bolid)
-            cv2.putText(drawn_image, f"{name[i]} {int(score[i])}", (bounding_box[0]-1,
-                        bounding_box[1]-4), cv2.FONT_HERSHEY_COMPLEX, 0.5, color, bolid)
+            cv2.rectangle(
+                drawn_image,
+                (bounding_box[0], bounding_box[1]),
+                (bounding_box[2], bounding_box[3]),
+                color,
+                bolid,
+            )
+            cv2.putText(
+                drawn_image,
+                f"{name[i]} {int(score[i])}",
+                (bounding_box[0] - 1, bounding_box[1] - 4),
+                cv2.FONT_HERSHEY_COMPLEX,
+                0.5,
+                color,
+                bolid,
+            )
 
     return drawn_image
 
@@ -95,10 +110,13 @@ def get_target_embedding():
     for player in tqdm(players):
         player_embeddings, player_names = [], []
         img_files = get_list(
-            Path(f"{Config.DETECT_FACE_TARGET_IMAGE_FOLDER_PATH}/{player}"), get_file=True)
+            Path(f"{Config.DETECT_FACE_TARGET_IMAGE_FOLDER_PATH}/{player}"),
+            get_file=True,
+        )
         for file in img_files:
             img = cv2.imread(
-                f"{Config.DETECT_FACE_TARGET_IMAGE_FOLDER_PATH}/{player}/{file}")
+                f"{Config.DETECT_FACE_TARGET_IMAGE_FOLDER_PATH}/{player}/{file}"
+            )
             if img is None:
                 continue
 
@@ -117,7 +135,7 @@ def get_target_embedding():
 
 
 def mute_call_liblary():
-    PROVIDERS = ['AzureExecutionProvider', 'CPUExecutionProvider']
+    PROVIDERS = ["AzureExecutionProvider", "CPUExecutionProvider"]
     CTX = [1, 0]
     providers = ""
     ctx = 0
@@ -138,7 +156,7 @@ def generate_random_digits(num_digits):
     if num_digits <= 0:
         num_digits = 1
 
-    min_value = 10**(num_digits-1)
+    min_value = 10 ** (num_digits - 1)
     max_value = (10**num_digits) - 1
     random_number = random.randint(min_value, max_value)
     return random_number
@@ -152,12 +170,13 @@ def detect_exec(app, img_path, known_embeddings, known_names):
         unknown_embeddings.append(faces[i].embedding)
 
     pred_names, pred_scores = judge_similarity_by_embeddings(
-        known_embeddings, known_names, unknown_embeddings, 200)
+        known_embeddings, known_names, unknown_embeddings, 200
+    )
     if has_target(pred_names):
-        detect = draw_faces_with_rectangles(
-            test_img, faces, pred_names, pred_scores)
+        detect = draw_faces_with_rectangles(test_img, faces, pred_names, pred_scores)
         file_path = Path(
-            f"{Config.TARGET_IMAGE_FOLDER_PATH}/recommend/{img_path.parent.name}/{img_path.stem}{img_path.suffix}")
+            f"{Config.TARGET_IMAGE_FOLDER_PATH}/recommend/{img_path.parent.name}/{img_path.stem}{img_path.suffix}"
+        )
         folder_exists_and_make(file_path)
         cv2.imwrite(str(file_path), detect)
 
@@ -186,11 +205,22 @@ def concurrent_processing():
     subfolders = get_list(Path(Config.TARGET_IMAGE_FOLDER_PATH))
     for folder in subfolders:
         file_names = get_list(
-            Path(f"{Config.TARGET_IMAGE_FOLDER_PATH}/{folder}"), get_file=True)
+            Path(f"{Config.TARGET_IMAGE_FOLDER_PATH}/{folder}"), get_file=True
+        )
         print(f"folder {folder} - {len(file_names)} 件")
         with ThreadPoolExecutor(max_workers=10) as executor:
-            results = tqdm((detect_exec(app, Path(f"{Config.TARGET_IMAGE_FOLDER_PATH}/{folder}/{file_name}"),
-                           known_embeddings, known_names) for file_name in file_names), total=len(file_names))
+            results = tqdm(
+                (
+                    detect_exec(
+                        app,
+                        Path(f"{Config.TARGET_IMAGE_FOLDER_PATH}/{folder}/{file_name}"),
+                        known_embeddings,
+                        known_names,
+                    )
+                    for file_name in file_names
+                ),
+                total=len(file_names),
+            )
             for _ in results:
                 pass
 
@@ -201,7 +231,8 @@ def main():
         concurrent_processing()
     else:
         print(
-            "Not set target image folder , input here --> [ Config.TARGET_IMAGE_FOLDER_PATH ]")
+            "Not set target image folder , input here --> [ Config.TARGET_IMAGE_FOLDER_PATH ]"
+        )
 
     end_time = time.time()
     elapsed_time = end_time - start_time
