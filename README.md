@@ -1,5 +1,5 @@
 <img src="https://img.shields.io/badge/-Python-F9DC3E.svg?logo=python&style=flat" data-canonical-src="https://img.shields.io/badge/-Python-F2C63C.svg?logo=python&amp;style=for-the-badge" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fimg.shields.io%2Fbadge%2F-Python-F2C63C.svg%3Flogo%3Dpython%26style%3Dfor-the-badge?ixlib=rb-4.0.0&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=5d7d909c2f70c6c8a0fc0477bd1a56ae 1x" loading="lazy">
-# 概要
+# 概要  
 このリポジトリには、insightfaceを使用して顔認識を行うPythonスクリプトが含まれています。  
 このスクリプトは画像内の顔を検出し、既知の顔と照合し認識された顔の周囲に境界ボックスを描画・名前を表示します。  
 
@@ -49,5 +49,5 @@ main_folde ── sub_folderA ─── img1.jpg
 # 追加の注意事項
 ・このスクリプトは、ThreadPoolExecutorを使用した並行処理をサポートしており、より高速な実行が可能です。  
 ・顔認識の閾値は200に設定されています。必要に応じて、judge_sim関数でこの閾値を調整できます。  
-・画像に描画するための色と境界ボックスの太さは、 get_paint 関数で定義されています。
+・画像に描画するための色と境界ボックスの太さは、 get_paint 関数で定義されています。  
 　必要に応じてこれらの設定をカスタマイズできます。  
